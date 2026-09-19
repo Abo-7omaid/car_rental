@@ -267,6 +267,7 @@ abstract final class AppTheme {
   static ThemeData dark() {
     return ThemeData(
       useMaterial3: true,
+
       brightness: Brightness.dark,
       scaffoldBackgroundColor: AppColors.surfaceDarkHi,
       colorScheme: const ColorScheme.dark(

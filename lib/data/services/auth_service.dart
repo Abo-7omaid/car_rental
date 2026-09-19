@@ -98,6 +98,11 @@ class AuthService {
 
   bool get isLoggedIn => currentUser != null;
 
+  static UserModel? UserInfo;
+
+
+
+
 
 
 
@@ -140,6 +145,8 @@ class AuthService {
         password: password
     );
 
+   UserInfo = await getUserProfile();
+
     return response;
 
   }
@@ -164,7 +171,6 @@ class AuthService {
       return UserModel.fromJson(response);
 
     } catch(e){
-      print('Error fetching the user $e');
       return null;
     }
 

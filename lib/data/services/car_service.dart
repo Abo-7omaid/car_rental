@@ -4,7 +4,7 @@ import '../models/car_model.dart';
 class CarService {
   final _client = Supabase.instance.client;
 
-  Future<List<CarModel>> getAllCars() async {
+    Future<List<CarModel>> getAllCars() async {
     final response = await _client.from('cars').select();
 
     return (response as List)

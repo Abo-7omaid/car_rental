@@ -44,7 +44,7 @@ class AppLogo extends StatelessWidget {
                 style: TextStyle(
                   fontSize: fontSize,
                   fontWeight: FontWeight.w800,
-                  color: primaryColor,         // 🔥 Changes "Rent" to Soft Gold!
+                  color: primaryColor,
                   letterSpacing: -0.5,
                 ),
               ),

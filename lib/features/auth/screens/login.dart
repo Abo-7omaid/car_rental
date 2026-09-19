@@ -216,6 +216,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       onPressed: (){
                         Navigator.pushNamed(context, '/register');
+
+                        // Navigator.pushReplacementNamed(context, '/register');
+
+
                       },
                     ),
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -33,14 +34,36 @@ class _SplashScreenState extends State<SplashScreen>
     _controller.forward();
 
     // Navigate to IntroScreen after 3 seconds
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/intro');
-
-
-      }
-    });
+    _navigateAfterSplash();
   }
+
+  Future<void> _navigateAfterSplash() async {
+
+    Future.delayed(const Duration(seconds: 2), () {
+      // if (mounted) {
+      //   Navigator.pushReplacementNamed(context, '/intro');
+      //
+      //
+      // }
+    });
+
+
+    if(!mounted) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final hasSeenIntro = prefs.getBool('has_seen_intro') ?? false ;
+
+    if (!mounted) return;
+
+    if(hasSeenIntro){
+      Navigator.pushReplacementNamed(context, '/login' );
+    } else{
+      Navigator.pushReplacementNamed(context, '/intro' );
+
+    }
+
+  }
+
 
   @override
   void dispose() {
@@ -52,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

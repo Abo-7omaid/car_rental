@@ -24,16 +24,19 @@ class AppColors {
   // ---------------------------------------------------------------------------
   // Core Brand Colors (Monochrome Luxury)
   // ---------------------------------------------------------------------------
-  static const Color primary = Color(0xFF111111); // Deep Carbon
+  static const Color primary = Color(0xFFDFDEDE); // Deep Carbon
   static const Color primaryLight = Color(0xFF2A2A2A);
   static const Color champagne  = Color(0xFFD4AF37); // Classic Soft Gold
 
-  static const Color accent = Color(0xFFE5CFA5); // Lighter, softer gold (optional)
+  // static const Color accent = Color(0xFFE5CFA5); // Lighter, softer gold (optional)
+  static const Color accent = Color(0xff55ddff); // Lighter, softer gold (optional)
 
-  static const Color accentLight = Color(0xFFC59B5F);
+  static const Color accentLight = Color(0xFF20515d);
+  // static const Color accentLight = Color(0xFFC59B5F);
   // ─── DARK MODE GOLD ───
   // The luminous, creamy champagne gold you love that glows on black
-  static const Color accentDark = Color(0xFFE5CFA5);
+  static const Color accentDark = Color(0xFF2f7585);
+  // static const Color accentDark = Color(0xFFE5CFA5);
   // ---------------------------------------------------------------------------
   // Light Theme Colors (Clean & Minimal)
   // ---------------------------------------------------------------------------

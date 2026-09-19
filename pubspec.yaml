@@ -52,6 +52,7 @@ dependencies:
   sqflite: ^2.4.4
   path: ^1.9.1
   flutter_glass_morphism: ^1.0.2
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,7 @@ flutter:
   assets:
     - assets/images/
     - assets/lottie/
+    - assets/svg/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

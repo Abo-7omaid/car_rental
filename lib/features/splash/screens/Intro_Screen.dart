@@ -3,6 +3,7 @@ import 'package:car_rental/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IntroScreen extends StatelessWidget {
   const IntroScreen({super.key});
@@ -63,12 +64,30 @@ class IntroScreen extends StatelessWidget {
         "Get Started",
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      onDone: () {
-        Navigator.pushReplacementNamed(context, '/login');
+
+
+
+      onDone: () async {
+
+        final prefs = await SharedPreferences.getInstance();
+        final hasSeenIntro = await  prefs.setBool('has_seen_intro' , true);
+
+        if(context.mounted){
+          Navigator.pushReplacementNamed(context, '/login');
+        }
+
       },
-      onSkip: () {
-        Navigator.pushReplacementNamed(context, '/login');
+      onSkip: () async {
+
+        final prefs = await SharedPreferences.getInstance();
+        final hasSeenIntro = await  prefs.setBool('has_seen_intro' , true);
+
+        if(context.mounted){
+          Navigator.pushReplacementNamed(context, '/login');
+        }
+
       },
+
       dotsDecorator: DotsDecorator(
         size: const Size.square(10.0),
         activeSize: const Size(22.0, 10.0),
@@ -97,54 +116,3 @@ class IntroScreen extends StatelessWidget {
   }
 }
 
-// ── Data class for each page ────────────────────────────────────────────────
-
-
-// class IntroScreen extends StatefulWidget {
-//   const IntroScreen({super.key});
-//
-//   @override
-//   State<IntroScreen> createState() => _IntroScreenState();
-// }
-//
-// class _IntroScreenState extends State<IntroScreen> {
-//
-//   final PageController _pageController = PageController();
-//   int _currentPage = 0;
-//   // Background color for the whole screen
-//   static const _bgColor = Color(0xFF1B1B2F);
-//
-//
-//   // Change images and text here
-//   final List<_IntroPageData> _pages = const [
-//     _IntroPageData(
-//       title: 'Easy way to rent\n your dream car',
-//       subtitle:
-//       'Browse our premium fleet of vehicles.\n'
-//           'From economy to luxury — we have\n'
-//           'the perfect ride for every journey.',
-//       imagePath: 'assets/images/Lamborghini-orange.jpg',
-//     ),
-//     _IntroPageData(
-//       title: 'Book in just\na few taps',
-//       subtitle:
-//       'Select your dates, choose extras,\n'
-//           'and confirm your reservation\n'
-//           'instantly — no paperwork needed.',
-//       imagePath: 'assets/images/mercedes-yellow.jpg',
-//     ),
-//     _IntroPageData(
-//       title: 'Hit the road\nwith confidence',
-//       subtitle:
-//       'Pick up your car and start your\n'
-//           'adventure. Enjoy the freedom of\n'
-//           'the open road with RentRide.',
-//       imagePath: 'assets/images/porche.jpg',
-//     ),
-//   ];
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Placeholder();
-//   }
-// }

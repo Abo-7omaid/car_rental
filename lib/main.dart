@@ -1,9 +1,13 @@
+import 'package:car_rental/features/booking/screens/booking.dart';
+import 'package:car_rental/features/home/screens/home.dart';
+import 'package:car_rental/intro.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/route/app_routes.dart';
 import 'core/constants/app_theme.dart';
 import 'features/splash/screens/splash_screen.dart';
+import 'features/auth/screens/login.dart';
 
 Future<void> main() async {
   // This line is REQUIRED before any async work (Supabase, Hive, SharedPrefs).
@@ -33,8 +37,12 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.dark, // follows the phone's dark/light setting
       // themeMode: ThemeMode.light, // follows the phone's dark/light setting
 
-      // This is the FIRST screen the user sees
-      home: const SplashScreen(),
+      home: SplashScreen(),
+      // home: HomeScreen(),
+
+
+
+
 
       // THIS IS THE KEY FIX: register all your named routes here.
       // Without this, Navigator.pushReplacementNamed(context, '/intro')
