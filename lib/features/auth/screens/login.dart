@@ -1,6 +1,7 @@
 import 'package:car_rental/my_widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_logo.dart';
+import '../../../data/services/biometric_service.dart';
 import '../../../my_widgets/app_text_field.dart';
 import 'package:car_rental/data/services/auth_service.dart';
 
@@ -193,7 +194,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 IconButton(
                   icon: Icon(Icons.fingerprint, size: 40,),
-                  onPressed: (){},
+                  onPressed: (){
+                    BiometricService().authenticateWithBiometrics(context);
+                  },
                 ),
 
 

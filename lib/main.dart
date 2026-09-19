@@ -3,6 +3,8 @@ import 'package:car_rental/features/home/screens/home.dart';
 import 'package:car_rental/intro.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'data/services/notification_service.dart';
+import 'data/services/permission_service.dart';
 
 import 'core/route/app_routes.dart';
 import 'core/constants/app_theme.dart';
@@ -18,6 +20,13 @@ Future<void> main() async {
     url: 'https://neizzshqtuaigwhgotpk.supabase.co',
     anonKey: 'sb_publishable_YszQKMv7sR4qqt6_3RJYmg_D2usm4qZ',
   );
+
+  await PermissionService.requestLocationPermission();
+
+  await NotificationService.init();
+
+
+
 
   runApp(const MyApp());
 }

@@ -1,6 +1,9 @@
 import 'package:car_rental/data/models/car_model.dart';
 import 'package:car_rental/data/models/user_model.dart';
+import 'package:car_rental/data/services/permission_service.dart';
 import 'package:car_rental/my_widgets/primary_button.dart';
+import 'package:permission_handler/permission_handler.dart';
+import '../../../data/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:car_rental/data/services/car_service.dart';
@@ -125,11 +128,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
         Row(
           children: [
-            Icon(
-              Icons.location_on_outlined,
-              color: colorScheme.primary,
-              size: 30,
+            GestureDetector(
+              onTap: () {
+                PermissionService.requestLocationPermission();
+              },
+
+              child: Icon(
+                Icons.location_on_outlined,
+                color: colorScheme.primary,
+                size: 30,
+              ),
             ),
+
             const SizedBox(width: 4),
             Text('Yemen, Sanaa', style: textTheme.bodyMedium),
             const SizedBox(width: 20),
@@ -141,7 +151,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: colorScheme.primary,
                   size: 30,
                 ),
-
                 //red dot
                 Positioned(
                   top: 2,
@@ -893,6 +902,22 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.green,
         ),
       );
+
+      final status = await Permission.notification.request();
+      if (status.isGranted) {
+        await NotificationService.showNotification(
+          title: 'Booking Confirmed! 🚗',
+          body: 'You successfully booked the ${car.brand} ${car.model}.',
+        );
+      }
+
+      await NotificationService.showNotification(
+        title: 'Booking Confirmed! 🚗',
+        body:
+            'You successfully booked the ${car.brand} ${car.model}. Get ready for the ride!',
+      );
+
+
     } catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

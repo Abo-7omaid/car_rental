@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/services/notification_service.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -39,19 +41,14 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _navigateAfterSplash() async {
 
-    Future.delayed(const Duration(seconds: 2), () {
-      // if (mounted) {
-      //   Navigator.pushReplacementNamed(context, '/intro');
-      //
-      //
-      // }
-    });
+    // Future.delayed(const Duration(seconds: 2), () {  });
 
 
     if(!mounted) return;
 
     final prefs = await SharedPreferences.getInstance();
     final hasSeenIntro = prefs.getBool('has_seen_intro') ?? false ;
+
 
     if (!mounted) return;
 

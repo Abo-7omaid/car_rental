@@ -35,17 +35,13 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   supabase_flutter: ^2.17.2
-#  firebase_core: ^4.14.0
-#  firebase: ^9.0.3
   introduction_screen: ^4.0.0
   lottie: ^3.5.1
   shared_preferences: ^2.5.5
-  permission_handler: ^13.0.1
-#  sqflite: ^2.4.3
+  permission_handler: ^13.0.2
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   flutter_secure_storage: ^11.0.0
-  local_auth: ^3.0.2
   hive_generator: ^2.0.1
   build_runner: ^2.4.13
   flutter_lints: ^6.0.0
@@ -53,6 +49,11 @@ dependencies:
   path: ^1.9.1
   flutter_glass_morphism: ^1.0.2
   shimmer: ^3.0.0
+  flutter_local_notifications: ^22.3.1
+  local_auth: ^3.0.2
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.8
+
 
 dev_dependencies:
   flutter_test:
@@ -107,3 +108,18 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.png"
+  min_sdk_android: 23
+  adaptive_icon_background: "#1A1A1A" # Tells Android to paint the circle dark
+  adaptive_icon_foreground: "assets/images/logo.png" # Tells Android to stretch the logo
+flutter_native_splash:
+  color: "#1A1A1A" # Your dark luxury background
+  image: "assets/images/logo.png"
+  android_12:
+    image: "assets/images/logo.png"
+    icon_background_color: "#1A1A1A"
