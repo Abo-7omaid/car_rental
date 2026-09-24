@@ -17,13 +17,13 @@ RentRide is a modern, cross-platform mobile application designed to make renting
 ---
 
 ## 📸 Screenshots
-*(Create a folder named `screenshots` in your repo and place your UI images there! Update the paths below if needed.)*
+*--*
 
 <p align="center">
-  <img src="screenshots/home.png" width="23%" alt="Home Screen" />
-  <img src="screenshots/login.png" width="23%" alt="Login Screen" />
-  <img src="screenshots/register.png" width="23%" alt="Register Screen" />
-  <img src="screenshots/bookings.png" width="23%" alt="My Bookings" />
+  <img src="screenshots/home.png" width="1408" alt="Home Screen" />
+  <img src="screenshots/login.png" width="1408" alt="Login Screen" />
+  <img src="screenshots/register.png" width="1408" alt="Register Screen" />
+  <img src="screenshots/home_light.png" width="1408" alt="My Bookings" />
 </p>
 
 ---
