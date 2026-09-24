@@ -26,11 +26,10 @@ class BookingService {
     });
   }
 
-  // 2. Get my bookings (with the car details joined!)
+  // 2. Get my bookings
   Future<List<BookingModel>> getMyBookings() async {
     final userId = _client.auth.currentUser!.id;
 
-    // Notice we do `select('*, cars(*)')` - this automatically fetches the car details too!
     final response = await _client
         .from('bookings')
         .select('*, cars(*)')

@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart'; // 👈 Added this for BuildContext, Navigator, and SnackBars
+import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 
 class BiometricService {
   final LocalAuthentication _localAuth = LocalAuthentication();
 
-  // 1. 👇 Added BuildContext context here
-  // 2. Removed the '_' so you can access this function from outside the class
   Future<void> authenticateWithBiometrics(BuildContext context) async {
     try {
       // Check if the device even supports biometrics
@@ -27,8 +25,8 @@ class BiometricService {
 
       );
 
-      // If fingerprint matched, go straight to the home screen!
-      if (didAuthenticate && context.mounted) { // 👈 Changed to context.mounted
+      // If fingerprint matched
+      if (didAuthenticate && context.mounted) {
         Navigator.pushReplacementNamed(context, '/home');
       }
     } catch (e) {

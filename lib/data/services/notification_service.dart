@@ -7,14 +7,12 @@ class NotificationService {
   static final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
 static const String ChannelId = 'Car-Rental';
-static const String ChannelName = 'Renting Cars';
-static const String ChannelDesc = 'Renting cars online';
+static const String ChannelName = 'Car Booking';
+static const String ChannelDesc = 'Notifications for successful car rentals';
 
   static Future<void> init() async {
-    // 1. Ask the user for permission to show notifications
 
-    // 2. Setup the Android icon (uses your default app icon)
-    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('launch_background');
+    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
 
     // 3. Setup iOS settings
     const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
@@ -65,7 +63,6 @@ static const String ChannelDesc = 'Renting cars online';
 
 
 
-  // 5. The function we will call to trigger the buzz!
   static Future<void> showNotification({required String title, required String body}) async {
     const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'rentride_bookings', // Channel ID

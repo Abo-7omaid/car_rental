@@ -9,7 +9,7 @@ class BookingModel {
   final DateTime endDate;
   final double totalPrice;
   final String status;
-  final CarModel? car; // We will attach the car data here to show it in the UI
+  final CarModel? car;
 
   BookingModel({
     required this.id,

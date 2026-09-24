@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:car_rental/my_widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_logo.dart';
@@ -23,10 +25,15 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   bool _isLoading = false;
+  bool _isLoadingGoogle = false;
+  int failedAttempt = 0;
+  int blockedSeconds = 0;
+  Timer? _loginTimer;
+
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _loginTimer?.cancel();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -40,39 +47,103 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  void _startCountdown() {
+    setState(() => blockedSeconds = 30);
+    _loginTimer = Timer.periodic( Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          if (blockedSeconds > 0) {
+            blockedSeconds--;
+          } else {
+            timer.cancel();
+          }
+        });
+      }
+    });
+  }
 
-  void _login()  async{
+
+
+
+  void _login() async {
+
+    if (blockedSeconds > 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please wait $blockedSeconds seconds before trying again.')),
+      );
+      return;
+    }
+
 
     if (!_formKey.currentState!.validate()) return;
-
     setState(() => _isLoading = true);
+
+
+    final result = await AuthService().signIn(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+
+    setState(() => _isLoading = false);
+
+    if (result.isSuccess) {
+      failedAttempt = 0;
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      failedAttempt++;
+
+      if (failedAttempt >= 3) {
+        _startCountdown();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Too many failed attempts. Locked for 30 seconds.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.message),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  void _googleSignIn() async {
+
+    setState(() => _isLoadingGoogle = true);
+
 
     final authService = AuthService();
 
+    try{
 
-    try {
-      await authService.signIn(email: _emailController.text.trim(), password: _passwordController.text.trim());
 
-      if (!mounted) return;
+      await authService.signInWithGoogle();
 
-      Navigator.pushReplacementNamed(context, '/home');
+      if(mounted) {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
 
-    } catch(e){
+
+
+
+    } catch (e){
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           duration: Duration(seconds: 5),
-          content: Text('Logging failed: ${e.toString()}'),
+          content: Text('Google Sign-In failed'),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
-
       );
-    }
-    finally{
-      setState(() {
-        _isLoading = false;
-      });
+    } finally {
+      if (mounted) {
+        setState(() => _isLoadingGoogle = false);
+      }
     }
 
 
@@ -80,7 +151,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   }
-
 
 
 
@@ -129,7 +199,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) return 'Please enter your email';
 
-                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) 'Please enter a valid email';
+                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                      return 'Please enter a valid email';
+                    }
 
                     return null;
 
@@ -154,7 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   validator: (value){
                     if (value == null || value.isEmpty) return 'Please enter your password';
 
-                    if(value.length < 6) 'Password must be at least 6 characters';
+                    if(value.length < 6) return 'Password must be at least 6 characters';
 
                     return null;
 
@@ -166,16 +238,28 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 5),
 
 
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 children: [
+                   if (failedAttempt >= 3) timer(context),
+
+                   const SizedBox(width: 1,),
+
+
 
                    Align(
-                     alignment: .centerRight,
+                     alignment: Alignment.centerRight,
                      child: TextButton(
-                       child: Text('Forget paswword?'),
+                       child: const Text('Forget password?'), // تم تصحيح الإملاء هنا
                        onPressed: () {
-                         Navigator.pushNamed(context, '/forgetPassword');
+                         Navigator.pushNamed(context, '/forgetPassword'); // الانتقال للشاشة الجديدة
                        },
                      ),
                    ),
+
+                 ],
+
+               ),
 
 
                  SizedBox(height: 5),
@@ -187,9 +271,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   isLoading: _isLoading,
 
 
+
                 ),
 
                 SizedBox(height: 24),
+
+
+                PrimaryButton(
+                  text: 'Sign In with Google',
+
+                  onPressed: _googleSignIn,
+                  isLoading: _isLoadingGoogle,
+                  icon: Icons.mail_lock_outlined,
+                  isOutlined: true,
+
+
+                ),
+
+
+
+                SizedBox(height: 24),
+
 
 
                 IconButton(
@@ -197,6 +299,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: (){
                     BiometricService().authenticateWithBiometrics(context);
                   },
+
                 ),
 
 
@@ -260,4 +363,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
     );
   }
+
+
+
+  Widget timer( BuildContext context){
+
+    return Row(
+
+      children: [
+        Text('remaining $blockedSeconds'),
+      ],
+
+    );
+
+  }
+
 }
+
+

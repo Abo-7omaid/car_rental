@@ -12,6 +12,8 @@ import 'package:car_rental/data/services/booking_service.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/app_colors.dart';
+import 'package:car_rental/data/services/database_service.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,11 +24,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<CarModel>> _carsFuture;
+  late Future<UserModel?> _authProfile;
+  Set<String> _favoriteCarIds = {};
+
   @override
   void initState() {
     super.initState();
     // 👇 Fetch the cars ONCE when the screen first opens
     _carsFuture = CarService().getAllCars();
+    _authProfile = AuthService().getUserProfile();
   }
 
   int _selectedBrandIndex = 1;
@@ -41,6 +47,41 @@ class _HomeScreenState extends State<HomeScreen> {
     {'name': 'Mercedes', 'icon': Icons.fire_truck},
   ];
 
+  Future<void> _loadFavorites() async {
+    final favorites = await DatabaseService().getFavorites();
+    if (mounted) {
+      setState(() {
+        _favoriteCarIds = favorites.map((e) => e['carId'] as String).toSet();
+      });
+    }
+  }
+
+
+
+  Future<void> _toggleFavorite(CarModel car) async {
+    final db = DatabaseService();
+    final isFavorite = _favoriteCarIds.contains(car.id);
+
+    if (isFavorite) {
+      await db.removeFavorite(car.id);
+      setState(() {
+        _favoriteCarIds.remove(car.id);
+      });
+    } else {
+      await db.addFavorite({
+        'id': car.id,
+        'carId': car.id,
+        'carName': '${car.brand} ${car.model}',
+        'carImage': car.imageUrl,
+        'pricePerDay': car.pricePerDay,
+      });
+      setState(() {
+        _favoriteCarIds.add(car.id);
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -53,9 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           SafeArea(
             child: RefreshIndicator(
-              color: colorScheme.primary, // Make the pulling spinner Gold!
+              color: colorScheme.primary,
               backgroundColor: colorScheme.surface, // Make the background dark
-              // 👇 2. Add the onRefresh function
+
               onRefresh: () async {
                 setState(() {
                   _carsFuture = CarService().getAllCars();
@@ -74,13 +115,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      _header(colorScheme, textTheme),
+                      _header (  colorScheme, textTheme),
                       SizedBox(height: 30),
                       _buildSearchBar(colorScheme, textTheme),
                       SizedBox(height: 20),
                       _buildBrandRow(colorScheme, textTheme),
                       SizedBox(height: 20),
-                      _buildCarGrid(colorScheme, textTheme),
+                      _buildCarGrid(  colorScheme, textTheme),
                       const SizedBox(height: 120),
                     ],
                   ),
@@ -97,8 +138,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _header(ColorScheme colorScheme, TextTheme textTheme) {
+  Widget _header( ColorScheme colorScheme, TextTheme textTheme) {
     String displayName = AuthService.UserInfo?.name.toString() ?? ' Guest';
+    print(displayName);
+    print(AuthService.UserInfo?.name.toString());
 
     return Row(
       mainAxisAlignment: .spaceBetween,
@@ -122,7 +165,20 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(width: 12),
 
-            Text(displayName, style: textTheme.titleLarge),
+            FutureBuilder<UserModel?>(
+              future: _authProfile,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text('Loading...', style: textTheme.titleLarge);
+                }
+                if (snapshot.hasData && snapshot.data != null) {
+                  final userModel = snapshot.data!;
+                  return Text('${userModel.name}', style: textTheme.titleLarge);
+                }
+                return Text('', style: textTheme.titleLarge);
+              },
+            ),
+            // Text(displayName, style: textTheme.titleLarge),
           ],
         ),
 
@@ -155,6 +211,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 Positioned(
                   top: 2,
                   right: 2,
+
+
+
+
+
+
+
                   child: Container(
                     height: 8,
                     width: 8,
@@ -164,6 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+
               ],
             ),
           ],
@@ -271,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCarGrid(ColorScheme colorScheme, TextTheme textTheme) {
+  Widget _buildCarGrid(  ColorScheme colorScheme, TextTheme textTheme) {
     return FutureBuilder<List<CarModel>>(
       future: _carsFuture,
       builder: (context, snapshot) {
@@ -416,18 +480,48 @@ class _HomeScreenState extends State<HomeScreen> {
                       )
                     : Container(height: 180, color: colorScheme.surface),
               ),
+
               Positioned(
                 top: 10,
                 right: 10,
-                child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.favorite,
-                    size: 30,
-                    color: colorScheme.error,
+                child: GestureDetector(
+                  onTap: () => _toggleFavorite(car),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: (Widget child, Animation<double> animation) {
+                      // أنميشن تكبير وتصغير (Scale) مع دوران خفيف لجعل الحركة طبيعية
+                      return ScaleTransition(
+                        scale: animation,
+                        child: child,
+                      );
+                    },
+                    child: Icon(
+                      _favoriteCarIds.contains(car.id)
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      key: ValueKey<bool>(_favoriteCarIds.contains(car.id)), // مفتاح مهم لتفعيل الأنميشن
+                      size: 32,
+                      color: _favoriteCarIds.contains(car.id)
+                          ? colorScheme.error // اللون الأحمر الفخم عند التفعيل
+                          : Colors.white.withValues(alpha: 0.9), // أبيض ناعم عند عدم التفعيل
+                    ),
                   ),
                 ),
               ),
+
+
+              // Positioned(
+              //   top: 10,
+              //   right: 10,
+              //   child: IconButton(
+              //     onPressed: () {},
+              //     icon: Icon(
+              //       Icons.favorite_outline,
+              //       size: 30,
+              //       color: colorScheme.error,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
 
@@ -541,17 +635,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 _buildNavItem(
                   1,
-                  Icons.search,
-                  'Explore',
-                  colorScheme,
-                  '/explore',
-                ),
-                _buildNavItem(
-                  2,
                   Icons.calendar_today,
                   'Bookings',
                   colorScheme,
                   '/bookings',
+                ),
+                _buildNavItem(
+                  2,
+                  Icons.favorite_outline,
+                  'favorites',
+                  colorScheme,
+                  '/favorites',
+
                 ),
                 _buildNavItem(
                   3,
@@ -582,12 +677,21 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () async {
         setState(() => _currentNavIndex = index);
-        if (index == 2) {
+        if (index == 1) {
           await Navigator.pushNamed(context, '/bookings');
+
 
           if (mounted) {
             setState(() => _currentNavIndex = 0);
           }
+        }
+        else if (index == 2) { // المفضلات
+          await Navigator.pushNamed(context, '/favorites');
+          if (mounted) setState(() => _currentNavIndex = 0); // العودة لتمييز أيقونة الهوم
+        }
+        else if (index == 3) { // 🌟 الحساب (البروفايل) - الخيار الجديد هنا
+          await Navigator.pushNamed(context, '/profile');
+          if (mounted) setState(() => _currentNavIndex = 0);
         }
       },
       child: Column(
@@ -649,11 +753,12 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [Icon(Icons.close, size: 35)],
             ),
             Align(
+              alignment: .center,
+
               child: Text(
                 'Confirm booking',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              alignment: .center,
             ),
             SizedBox(height: 20),
 
@@ -898,7 +1003,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // Success!
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Car Booked Successfully! 🎉'),
+          content: Text('Car Booked Successfully! '),
           backgroundColor: Colors.green,
         ),
       );
@@ -911,11 +1016,7 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       }
 
-      await NotificationService.showNotification(
-        title: 'Booking Confirmed! 🚗',
-        body:
-            'You successfully booked the ${car.brand} ${car.model}. Get ready for the ride!',
-      );
+
 
 
     } catch (e) {

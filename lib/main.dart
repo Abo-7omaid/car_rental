@@ -40,11 +40,10 @@ class MyApp extends StatelessWidget {
       title: 'RentRide',
       debugShowCheckedModeBanner: false,
 
-      // These two lines activate your AppTheme (light + dark mode support)
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      themeMode: ThemeMode.dark, // follows the phone's dark/light setting
-      // themeMode: ThemeMode.light, // follows the phone's dark/light setting
+      // themeMode: ThemeMode.dark, // follows the phone's dark/light setting
+      themeMode: ThemeMode.system,
 
       home: SplashScreen(),
       // home: HomeScreen(),
@@ -53,9 +52,7 @@ class MyApp extends StatelessWidget {
 
 
 
-      // THIS IS THE KEY FIX: register all your named routes here.
-      // Without this, Navigator.pushReplacementNamed(context, '/intro')
-      // throws "Could not find a generator for route" and the app freezes.
+
       routes: AppRoutes.routes,
     );
   }

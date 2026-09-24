@@ -36,6 +36,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
         future: _bookingsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
+
             return Center(child: CircularProgressIndicator(color: colorScheme.primary));
           }
           if (snapshot.hasError) {
@@ -58,9 +59,8 @@ class _BookingsScreenState extends State<BookingsScreen> {
               final booking = bookings[index];
               final car = booking.car;
 
-              if (car == null) return const SizedBox(); // Failsafe
+              if (car == null) return const SizedBox();
 
-              // Format dates nicely (e.g., Oct 12)
               final startDate = DateFormat('MMM d, yyyy').format(booking.startDate);
               final endDate = DateFormat('MMM d, yyyy').format(booking.endDate);
 

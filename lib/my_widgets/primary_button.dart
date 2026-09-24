@@ -28,6 +28,7 @@ class PrimaryButton extends StatelessWidget {
         : ElevatedButton(
       onPressed: isLoading ? null : onPressed,
       child: _buildChild(context),
+
     );
 
     return SizedBox(
