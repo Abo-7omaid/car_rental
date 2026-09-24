@@ -19,13 +19,12 @@ RentRide is a modern, cross-platform mobile application designed to make renting
 ## 📸 Screenshots
 *--*
 
-<p >
-  <img  src="screenshots/home.png" width="1408" alt="Home Screen" />
-  <img src="screenshots/login.png" width="1408" alt="Login Screen" />
-  <img src="screenshots/register.png" width="1408" alt="Register Screen" />
-  <img src="screenshots/home_light.png" width="1408" alt="My Bookings" />
+<p align="center">
+  <img src="screenshots/home.png" width="23%" alt="Home Screen" />
+  <img src="screenshots/login.png" width="23%" alt="Login Screen" />
+  <img src="screenshots/register.png" width="23%" alt="Register Screen" />
+  <img src="screenshots/home_light.png" width="23%" alt="My Bookings" />
 </p>
-
 ---
 
 ## ✨~~~~ Key Features
