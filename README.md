@@ -1,4 +1,4 @@
-<div align="center">
+<div >
   
   # 🚗 RentRide
   
@@ -19,8 +19,8 @@ RentRide is a modern, cross-platform mobile application designed to make renting
 ## 📸 Screenshots
 *--*
 
-<p align="center">
-  <img src="screenshots/home.png" width="1408" alt="Home Screen" />
+<p >
+  <img  src="screenshots/home.png" width="1408" alt="Home Screen" />
   <img src="screenshots/login.png" width="1408" alt="Login Screen" />
   <img src="screenshots/register.png" width="1408" alt="Register Screen" />
   <img src="screenshots/home_light.png" width="1408" alt="My Bookings" />
@@ -28,7 +28,7 @@ RentRide is a modern, cross-platform mobile application designed to make renting
 
 ---
 
-## ✨ Key Features
+## ✨~~~~ Key Features
 
 *   **Advanced Authentication:** Secure login using Email/Password, Google Sign-In (OAuth 2.0), and Hardware Biometrics (Fingerprint/FaceID).
 *   **Live Car Catalog:** Browse luxury cars dynamically fetched from the cloud. Filter by brand (Porsche, Mercedes, Ferrari, etc.) and view detailed specifications.
@@ -121,6 +121,6 @@ lib/
 
 ---
 
-<div align="center">
+<div >
   <b>Built with ❤️ by Abo7omaid for Final Year Computer Science Project</b>
 </div>
